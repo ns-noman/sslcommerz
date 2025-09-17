@@ -1,66 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## SSLCommerz - Laravel Library
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+```
+For any technical support, please email at nsanoman@gmail.com
+```
 
-## About Laravel
+### Compatibility
+Supports Laravel v5.6 to v10.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### License
+GPLv2 or later
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+### Instructions:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* __Step 1:__ Download and extract the library files.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* __Step 2:__ Copy the `Library` folder and put it in the laravel project's `app/` directory. If needed, then run `composer dump -o`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* __Step 3:__ Copy the `config/sslcommerz.php` file into your project's `config/` folder.
 
-## Laravel Sponsors
+* __Step 4:__ Copy and put 3 key-value pairs from `env_example` to your `.env` file. 
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+For development purposes, you can obtain sandbox 'Store ID' and 'Store Password' by registering at [https://developer.sslcommerz.com/registration/](https://developer.sslcommerz.com/registration/)
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+* __Step 5:__ Add exceptions for `VerifyCsrfToken` middleware accordingly (this is for our example code, **use your actual routes**).
 
-## Contributing
+```php
+protected $except = [
+    '/success',
+    '/cancel',
+    '/fail',
+    '/ipn',
+    '/pay-via-ajax', // only required to run example codes. Please see bellow.
+];
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* __Optional:__ We have also provided some example codes which can help you understand the process. **Developer's discretion is needed. Following steps are not mandatory.**
 
-## Code of Conduct
+> Copy `SslCommerzPaymentController` into your project's `Controllers` folder.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+> Copy defined routes from `routes/web.php` into your project's route file.
 
-## Security Vulnerabilities
+> Copy views from `resources/views/*.blade.php`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+### To Show sslcommerz gateway page inside a popup (optional)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* If you use blade templates, we provide a simple solution to show sslcommerz gateway page inside popup. To integrate it, You need to have a `<button>` with following properties in your blade file -
+
+    * id="sslczPayBtn" 
+    * endpoint=[your ajax route]
+    * postdata= [you need to populate a js object with required form fields]
+
+```
+<button id="sslczPayBtn"
+        token="if you have any token validation"
+        postdata=""
+        order="If you already have the transaction generated for current order"
+        endpoint="/pay-via-ajax"> Pay Now
+</button>
+```
+* Populate postdata obj as required -
+
+```
+<script>
+    var obj = {};
+    obj.cus_name = $('#customer_name').val();
+    obj.cus_phone = $('#mobile').val();
+    obj.cus_email = $('#email').val();
+    obj.cus_addr1 = $('#address').val();
+    obj.amount = $('#total_amount').val();
+    
+    $('#sslczPayBtn').prop('postdata', obj);
+</script>
+```
+
+* Add following script -
+
+##### For Sandbox
+
+```
+<script>
+    (function (window, document) {
+        var loader = function () {
+            var script = document.createElement("script"), tag = document.getElementsByTagName("script")[0];
+            script.src = "https://sandbox.sslcommerz.com/embed.min.js?" + Math.random().toString(36).substring(7);
+            tag.parentNode.insertBefore(script, tag);
+        };
+
+        window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+    })(window, document);
+</script>
+```
+##### For Live
+
+```
+<script>
+    (function (window, document) {
+        var loader = function () {
+            var script = document.createElement("script"), tag = document.getElementsByTagName("script")[0];
+            script.src = "https://seamless-epay.sslcommerz.com/embed.min.js?" + Math.random().toString(36).substring(7);
+            tag.parentNode.insertBefore(script, tag);
+        };
+    
+        window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+    })(window, document);
+</script>
+```
+
+
+### FAQ
+* Session is destroyed after redirecting to success/cancel/fail URL
+
+> This is a general Laravel issue, **unrelated to SSLCommerz**. You can try setting 'same_site' => 'none' in your `config/session.php` file.
+
+* I am getting an error saying "Store Credential Error Or Store is Deactive"
+
+> You have incorrect (or missing) configuration values in .env file. Check step 4.
+
+* I am not getting IPN in localhost / development machine.
+
+> You can't. IPN requires a publicly accessible webserver.
+
+
+### Contributors
+> Nowab Shorif
+
+> Prabal Mallick
